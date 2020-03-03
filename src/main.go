@@ -1,8 +1,7 @@
-package eventbot
+package main
 
 import (
 	"fmt"
-	"golang.org/x/oauth2"
 	"log"
 	"net/http"
 	"os"
@@ -10,9 +9,8 @@ import (
 
 const homepageEndPoint = "/"
 
-
-// StartWebServer the webserver to listen for new emails.
-func StartWebServer(tokenSource oauth2.TokenSource) {
+// StartWebServer the webserver
+func StartWebServer() {
 	http.HandleFunc(homepageEndPoint, handleHomepage)
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
@@ -34,4 +32,8 @@ func handleHomepage(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("Failed to write response, err: %s", err)
 	}
+}
+
+func main() {
+  StartWebServer()
 }

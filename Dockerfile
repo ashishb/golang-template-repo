@@ -17,8 +17,11 @@ RUN ls -lR /codebase
 RUN make build
 
 FROM base
-WORKDIR /binary
-COPY --from=builder /codebase/bin/* bin/
+WORKDIR /
+ARG BINARY_NAME
+ENV BINARY_PATH="/bin/${BINARY_NAME}"
+COPY --from=builder /codebase/bin/* ${BINARY_PATH}
+RUN ls -l ${BINARY_PATH}
 # Optional: Copy more stuff into final image here
 
-CMD ["bin/BINARY_NAME", "args"]
+CMD ["sh", "-c", "${BINARY_PATH}"]
