@@ -15,7 +15,7 @@ build:
 
 # Warning: This produces the same "bot" binary as `build` command.
 build_linux:
-	GOOS=linux GOARCH=amd64 go build -v src/*.go -o ${BINARY_NAME}
+	GOOS=linux GOARCH=amd64 go build -v src/*.go -o bin/${BINARY_NAME}
 
 go_lint:
 	GO111MODULE=on go mod tidy
