@@ -1,0 +1,29 @@
+# Source: https://github.com/mvdan/github-actions-golang
+on: [push, pull_request]
+name: Test
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: [1.13.x, 1.14.x]
+        platform: [ubuntu-latest, macos-latest]  # You can test on windows-latest as well
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go-version }}
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Init
+      run: make init NAME=github.com/ashishb/golang-template-repo
+    - name: Build
+      run: make build
+      # - name: Lint
+      #   run: go get -u golang.org/x/lint/golint && make lint
+    - name: Verify no formatting issues
+      # Source: https://github.com/golang/go/issues/24230
+      run: test -z $(go fmt ./src/...)
+    - name: Test
+      run: make test
+
