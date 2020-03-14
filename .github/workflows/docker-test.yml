@@ -1,0 +1,13 @@
+name: Build docker image
+on: push
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: [1.13.x, 1.14.x]
+        platform: [ubuntu-latest]  # You can test on macos-latest and windows-latest as well
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker image
+        run: make init NAME=github.com/ashishb/golang-template-repo  && touch go.sum && make docker_build

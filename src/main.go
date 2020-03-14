@@ -35,5 +35,5 @@ func handleHomepage(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-  StartWebServer()
+	StartWebServer()
 }
