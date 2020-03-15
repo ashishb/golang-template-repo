@@ -6,7 +6,7 @@ GOOGLE_CLOUD_RUN_SERVICE_NAME = "gcloud_service_name"
 DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_NAME}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
 
 # One-time usage
-# Example: `go mod init NAME=calendarbot`
+# Example: `make init NAME=calendarbot`
 init:
 	GO111MODULE=on go mod init ${NAME}
 
@@ -59,7 +59,7 @@ docker_gcr_push: docker_build
 	docker push ${DOCKER_TAG}
 	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_NAME}"
 
-gcr_deploy: docker_gcr_push
+gcloud_deploy: docker_gcr_push
 	gcloud run deploy ${GOOGLE_CLOUD_RUN_SERVICE_NAME} \
 		--image ${DOCKER_TAG} \
 		--platform managed \
