@@ -1,6 +1,6 @@
 BINARY_NAME = "binary_name"
 # TODO: Edit these field names based on your Google cloud setup
-GOOGLE_CLOUD_PROJECT_ID = "gcloud_project_ID"
+GOOGLE_CLOUD_PROJECT_ID = "gcloud_project_id"
 GOOGLE_CLOUD_RUN_SERVICE_NAME = "gcloud_service_name"
 
 DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_ID}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
