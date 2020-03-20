@@ -1,9 +1,9 @@
 BINARY_NAME = "binary_name"
 # TODO: Edit these field names based on your Google cloud setup
-GOOGLE_CLOUD_PROJECT_NAME = "gcloud_project_name"
+GOOGLE_CLOUD_PROJECT_ID = "gcloud_project_ID"
 GOOGLE_CLOUD_RUN_SERVICE_NAME = "gcloud_service_name"
 
-DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_NAME}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
+DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_ID}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
 
 # One-time usage
 # Example: `make init NAME=calendarbot`
@@ -57,14 +57,14 @@ docker_gcr_login:
 
 docker_gcr_push: docker_build
 	docker push ${DOCKER_TAG}
-	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_NAME}"
+	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
 gcloud_deploy: docker_gcr_push
 	gcloud run deploy ${GOOGLE_CLOUD_RUN_SERVICE_NAME} \
 		--image ${DOCKER_TAG} \
 		--platform managed \
 		--region us-central1 \
-		--project ${GOOGLE_CLOUD_PROJECT_NAME}
-	echo "Once you are satisfied with the new deployment, delete the old one at https://console.cloud.google.com/run/detail/us-central1/${GOOGLE_CLOUD_RUN_SERVICE_NAME}/revisions?project=${GOOGLE_CLOUD_PROJECT_NAME}"
+		--project ${GOOGLE_CLOUD_PROJECT_ID}
+	echo "Once you are satisfied with the new deployment, delete the old one at https://console.cloud.google.com/run/detail/us-central1/${GOOGLE_CLOUD_RUN_SERVICE_NAME}/revisions?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
 
