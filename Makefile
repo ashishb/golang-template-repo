@@ -15,12 +15,13 @@ build:
 
 # Warning: This produces the same "bot" binary as `build` command.
 build_linux:
-	GOOS=linux GOARCH=amd64 go build -v src/*.go -o bin/${BINARY_NAME}
+	GOOS=linux GOARCH=amd64 go build -o bin/${BINARY_NAME} -v src/*.go 
 
 go_lint:
 	GO111MODULE=on go mod tidy
 	GO111MODULE=on go vet ./src
 	golint -set_exit_status ./src/...
+	go tool fix src/
 
 docker_lint:
 	hadolint Dockerfile
