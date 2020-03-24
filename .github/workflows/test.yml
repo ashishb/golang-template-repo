@@ -19,6 +19,8 @@ jobs:
       run: make init NAME=github.com/ashishb/golang-template-repo
     - name: Build
       run: make build
+    - name: Build Linux
+      run: make build_linux
       # - name: Lint
       #   run: go get -u golang.org/x/lint/golint && make lint
     - name: Verify no formatting issues
