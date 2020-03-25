@@ -42,7 +42,7 @@ run: build
 	PORT=8080 ./bin/${BINARY_NAME}
 
 docker_build:
-	docker build -f Dockerfile -t ${DOCKER_TAG} --build-arg BINARY_NAME=${BINARY_NAME} .
+	DOCKER_BUILDKIT=1 docker build -f Dockerfile -t ${DOCKER_TAG} --build-arg BINARY_NAME=${BINARY_NAME} .
 	echo "Created docker image with tag ${DOCKER_TAG} and size `docker image inspect ${DOCKER_TAG} --format='{{.Size}}' | numfmt --to=iec-i`"
 
 # For local testing
