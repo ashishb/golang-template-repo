@@ -41,7 +41,7 @@ test:
 run: build
 	PORT=8080 ./bin/${BINARY_NAME}
 
-run_debug:  # watch for modifications
+run_debug:  # watch for modifications and restart the binary if any golang file changes
 	filewatcher --immediate --restart "**/*.go" "killall ${BINARY_NAME}; make run"
 
 docker_build:
