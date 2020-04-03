@@ -41,6 +41,9 @@ test:
 run: build
 	PORT=8080 ./bin/${BINARY_NAME}
 
+run_debug:  # watch for modifications
+	filewatcher --immediate --restart "**/*.go" "killall ${BINARY_NAME}; make run"
+
 docker_build:
 	DOCKER_BUILDKIT=1 docker build -f Dockerfile -t ${DOCKER_TAG} --build-arg BINARY_NAME=${BINARY_NAME} .
 	echo "Created docker image with tag ${DOCKER_TAG} and size `docker image inspect ${DOCKER_TAG} --format='{{.Size}}' | numfmt --to=iec-i`"
@@ -61,6 +64,7 @@ docker_gcr_push: docker_build
 	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
 gcloud_deploy: docker_gcr_push
+	git tag "gcloud_deploy_$(shell date | tr ' ' '_' | tr ':' '-')"
 	gcloud run deploy ${GOOGLE_CLOUD_RUN_SERVICE_NAME} \
 		--image ${DOCKER_TAG} \
 		--platform managed \
