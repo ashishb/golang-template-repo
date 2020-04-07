@@ -24,7 +24,7 @@ go_lint:
 	go tool fix src/
 
 docker_lint:
-	hadolint Dockerfile
+	hadolint --ignore DL3018 Dockerfile
 
 lint: format go_lint docker_lint build
 
