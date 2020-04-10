@@ -22,6 +22,7 @@ go_lint:
 	GO111MODULE=on go vet ./src
 	golint -set_exit_status ./src/...
 	go tool fix src/
+	golangci-lint run
 
 docker_lint:
 	hadolint --ignore DL3018 Dockerfile
