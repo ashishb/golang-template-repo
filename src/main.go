@@ -5,17 +5,20 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 const homepageEndPoint = "/"
+const dynamicEndpoint = "/dynamic"
 
 // StartWebServer the webserver
 func StartWebServer() {
-	http.HandleFunc(homepageEndPoint, handleHomepage)
 	port := os.Getenv("PORT")
 	if len(port) == 0 {
 		panic("Environment variable PORT is not set")
 	}
+	http.Handle(homepageEndPoint, http.FileServer(http.Dir("./website")))
+	http.HandleFunc(dynamicEndpoint, handleDynamic)
 
 	log.Printf("Starting web server to listen on endpoints [%s] and port %s",
 		homepageEndPoint, port)
@@ -24,10 +27,10 @@ func StartWebServer() {
 	}
 }
 
-func handleHomepage(w http.ResponseWriter, r *http.Request) {
+func handleDynamic(w http.ResponseWriter, r *http.Request) {
 	urlPath := r.URL.Path
 	log.Printf("Web request received on url path %s", urlPath)
-	msg := "Hello world"
+	msg := "Hello world from GoLang at " + time.Now().Format("Jan 2 2006 15:04:05")
 	_, err := w.Write([]byte(msg))
 	if err != nil {
 		fmt.Printf("Failed to write response, err: %s", err)

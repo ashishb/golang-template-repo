@@ -15,7 +15,7 @@ build:
 
 # Warning: This produces the same "bot" binary as `build` command.
 build_linux:
-	GOOS=linux GOARCH=amd64 go build -o bin/${BINARY_NAME} -v src/*.go 
+	GOOS=linux GOARCH=amd64 go build -o bin/${BINARY_NAME} -v src/*.go
 
 go_lint:
 	GO111MODULE=on go mod tidy
@@ -27,7 +27,10 @@ go_lint:
 docker_lint:
 	hadolint --ignore DL3018 Dockerfile
 
-lint: format go_lint docker_lint build
+html_lint:
+	find website -iname '*htm*' -exec htmlhint  --config .htmlhintrc {} \;
+
+lint: format go_lint docker_lint html_lint build
 
 format:
 	go fmt ./src/...

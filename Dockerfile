@@ -9,10 +9,10 @@ FROM golang:1.13.7-alpine3.11  as builder
 
 WORKDIR /codebase
 
-COPY Makefile go.mod go.sum /codebase/
-COPY src /codebase/src
 # To install make
 RUN apk add --no-cache build-base
+COPY Makefile go.mod go.sum /codebase/
+COPY src /codebase/src
 RUN ls -lR /codebase
 RUN make build
 
@@ -21,6 +21,7 @@ WORKDIR /
 ARG BINARY_NAME
 ENV BINARY_PATH="/bin/${BINARY_NAME}"
 COPY --from=builder /codebase/bin/* ${BINARY_PATH}
+COPY website /website
 RUN ls -l ${BINARY_PATH}
 # Optional: Copy more stuff into final image here
 
