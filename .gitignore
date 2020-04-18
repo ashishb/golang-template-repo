@@ -13,3 +13,6 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 bin/
+
+# A secret like a credential which we don't want to reveal
+secret.txt

@@ -2,6 +2,8 @@ BINARY_NAME = "binary_name"
 # TODO: Edit these field names based on your Google cloud setup
 GOOGLE_CLOUD_PROJECT_ID = "gcloud_project_id"
 GOOGLE_CLOUD_RUN_SERVICE_NAME = "gcloud_service_name"
+# We base64 encode it to remove encode all special characters including whitespace
+SECRET_VALUE=`cat secret.txt | base64`
 
 DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_ID}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
 
@@ -43,7 +45,7 @@ test:
 	GO111MODULE=on go test ./src/... -v
 
 run: build
-	PORT=8080 ./bin/${BINARY_NAME}
+	PORT=8080 SECRET_VALUE=${SECRET_VALUE} ./bin/${BINARY_NAME}
 
 run_debug:  # watch for modifications and restart the binary if any golang file changes
 	filewatcher --immediate --restart "**/*.go" "killall ${BINARY_NAME}; make run"
@@ -57,6 +59,7 @@ docker_run: docker_build
 	docker rm ${BINARY_NAME}; docker run --name ${BINARY_NAME} -p 127.0.0.1:80:80 \
 		-p 127.0.0.1:443:443 \
 		--env PORT=80 \
+		--env SECRET_VALUE=${SECRET_VALUE} \
 		-it ${DOCKER_TAG}
 
 # One time
@@ -73,6 +76,7 @@ gcloud_deploy: docker_gcr_push
 		--image ${DOCKER_TAG} \
 		--platform managed \
 		--region us-central1 \
+		--set-env-vars=SECRET_VALUE=${SECRET_VALUE} \
 		--project ${GOOGLE_CLOUD_PROJECT_ID}
 	echo "Once you are satisfied with the new deployment, delete the old one at https://console.cloud.google.com/run/detail/us-central1/${GOOGLE_CLOUD_RUN_SERVICE_NAME}/revisions?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
