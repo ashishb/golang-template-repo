@@ -11,6 +11,8 @@ DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_ID}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}
 # Example: `make init NAME=calendarbot`
 init:
 	GO111MODULE=on go mod init ${NAME}
+	# A random secret value like a credential
+	echo "random value" > secret.txt
 
 build:
 	GO111MODULE=on go build -v -o bin/${BINARY_NAME} src/*.go
