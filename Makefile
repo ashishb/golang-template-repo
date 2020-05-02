@@ -2,6 +2,8 @@ BINARY_NAME = "binary_name"
 # TODO: Edit these field names based on your Google cloud setup
 GOOGLE_CLOUD_PROJECT_ID = "gcloud_project_id"
 GOOGLE_CLOUD_RUN_SERVICE_NAME = "gcloud_service_name"
+REGION="us-central1"
+
 # We base64 encode it to remove encode all special characters including whitespace
 SECRET_VALUE=`cat secret.txt | base64`
 
@@ -77,9 +79,9 @@ gcloud_deploy: docker_gcr_push
 	gcloud run deploy ${GOOGLE_CLOUD_RUN_SERVICE_NAME} \
 		--image ${DOCKER_TAG} \
 		--platform managed \
-		--region us-central1 \
+		--region ${REGION} \
 		--set-env-vars=SECRET_VALUE=${SECRET_VALUE} \
 		--project ${GOOGLE_CLOUD_PROJECT_ID}
-	echo "Once you are satisfied with the new deployment, delete the old one at https://console.cloud.google.com/run/detail/us-central1/${GOOGLE_CLOUD_RUN_SERVICE_NAME}/revisions?project=${GOOGLE_CLOUD_PROJECT_ID}"
+	echo "Once you are satisfied with the new deployment, delete the old one at https://console.cloud.google.com/run/detail/${REGION}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}/revisions?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
 
