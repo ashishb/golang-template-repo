@@ -2,7 +2,7 @@ BINARY_NAME = "binary_name"
 # TODO: Edit these field names based on your Google cloud setup
 GOOGLE_CLOUD_PROJECT_ID = "gcloud_project_id"
 GOOGLE_CLOUD_RUN_SERVICE_NAME = "gcloud_service_name"
-REGION="us-central1"
+REGION="us-east4"
 
 # We base64 encode it to remove encode all special characters including whitespace
 SECRET_VALUE=`cat secret.txt | base64`
