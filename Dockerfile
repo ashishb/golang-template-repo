@@ -3,18 +3,19 @@
 # You can connect to the running container using
 # docker exec -t -i bot /bin/sh
 
-FROM alpine:3.11 as base
+FROM alpine:3.15 as base
 
-FROM golang:1.13.7-alpine3.11  as builder
+FROM golang:1.17.4-alpine3.15 as builder
 
 WORKDIR /codebase
 
-# To install make
-RUN apk add --no-cache build-base
+# build-base = To install make
+# upx = To shrink the binary
+RUN apk add --no-cache build-base upx
 COPY Makefile go.mod go.sum /codebase/
 COPY src /codebase/src
 RUN ls -lR /codebase
-RUN make build
+RUN make build_prod
 
 FROM base
 WORKDIR /

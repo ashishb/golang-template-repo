@@ -16,8 +16,15 @@ init:
 	# A random secret value like a credential
 	echo "random value" > secret.txt
 
-build:
+build_debug:
 	GO111MODULE=on go build -v -o bin/${BINARY_NAME} src/*.go
+
+build_prod:
+	# Shrink binary by removing symbol and DWARF table
+	# Ref: https://lukeeckley.com/post/useful-go-build-flags/
+	GO111MODULE=on go build -v -ldflags="-s -w" -o bin/${BINARY_NAME} src/*.go
+	# Shrink with upx - this is slow and can take minutes
+	upx --brute bin/${BINARY_NAME}
 
 # Warning: This produces the same "bot" binary as `build` command.
 build_linux:
@@ -48,7 +55,7 @@ clean:
 test:
 	GO111MODULE=on go test ./src/... -v
 
-run: build
+run: build_debug
 	PORT=8080 SECRET_VALUE=${SECRET_VALUE} ./bin/${BINARY_NAME}
 
 run_debug:  # watch for modifications and restart the binary if any golang file changes
