@@ -9,5 +9,9 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - name: Build Docker image
-        run: make init NAME=github.com/ashishb/golang-template-repo  && touch go.sum && make docker_build
+      - name: Init repo
+        run: make init NAME=github.com/ashishb/golang-template-repo
+      - name: Fetch modules
+        run: touch go.sum && go mod tidy
+      - name: Docker build
+        run: make docker_build
