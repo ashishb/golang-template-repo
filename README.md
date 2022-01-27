@@ -1,5 +1,4 @@
-# GoLang + Docker + Google Cloud Run template repository [![Test](https://github.com/ashishb/golang-template-repo/workflows/Test/badge.svg)](https://github.com/ashishb/golang-template-repo/actions)
-
+# GoLang + Docker + Google Cloud Run template repository [![Test](https://github.com/ashishb/golang-template-repo/actions/workflows/test.yml/badge.svg)](https://github.com/ashishb/golang-template-repo/actions/workflows/test.yml) [![Build docker image](https://github.com/ashishb/golang-template-repo/actions/workflows/docker-test.yml/badge.svg)](https://github.com/ashishb/golang-template-repo/actions/workflows/docker-test.yml)
 
 
 ## Basic development
