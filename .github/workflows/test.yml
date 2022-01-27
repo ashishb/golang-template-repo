@@ -18,7 +18,7 @@ jobs:
     - name: Init
       run: make init NAME=github.com/ashishb/golang-template-repo
     - name: Build
-      run: make build
+      run: make build_debug
     - name: Build Linux
       run: make build_linux
       # - name: Lint
