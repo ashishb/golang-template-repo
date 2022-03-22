@@ -9,6 +9,7 @@ FROM golang:1.17.4-alpine3.15 as builder
 
 WORKDIR /codebase
 
+# Full package list is here https://pkgs.alpinelinux.org/packages
 # build-base = To install make
 # upx = To shrink the binary
 RUN apk add --no-cache build-base upx
