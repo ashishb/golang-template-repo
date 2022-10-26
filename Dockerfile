@@ -3,9 +3,9 @@
 # You can connect to the running container using
 # docker exec -t -i bot /bin/sh
 
-FROM alpine:3.15 as base
+FROM alpine:3.16 as base
 
-FROM golang:1.17.4-alpine3.15 as builder
+FROM golang:1.19.2-alpine3.16 as builder
 
 WORKDIR /codebase
 
