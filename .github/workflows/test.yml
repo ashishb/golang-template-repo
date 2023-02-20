@@ -5,7 +5,7 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.13.x, 1.14.x]
+        go-version: [1.18.x, 1.19.x]
         platform: [ubuntu-latest, macos-latest]  # You can test on windows-latest as well
     runs-on: ${{ matrix.platform }}
     steps:
