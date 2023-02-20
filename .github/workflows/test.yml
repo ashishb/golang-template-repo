@@ -1,6 +1,11 @@
 # Source: https://github.com/mvdan/github-actions-golang
 on: [push, pull_request]
 name: Test
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     strategy:
