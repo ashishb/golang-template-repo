@@ -10,7 +10,7 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.13.x, 1.14.x]
+        go-version: [1.18.x, 1.19.x]
         platform: [ubuntu-latest, macos-latest]  # You can test on windows-latest as well
     runs-on: ${{ matrix.platform }}
     steps:
@@ -22,6 +22,8 @@ jobs:
       uses: actions/checkout@v2
     - name: Init
       run: make init NAME=github.com/ashishb/golang-template-repo
+    - name: Fetch modules
+      run: touch go.sum && go mod tidy
     - name: Build
       run: make build_debug
     - name: Build Linux
