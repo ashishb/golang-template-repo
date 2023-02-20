@@ -6,13 +6,17 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  docker_build:
     strategy:
       matrix:
-        go-version: [1.13.x, 1.14.x]
+        go-version: [1.18.x, 1.19.x]
         platform: [ubuntu-latest]  # You can test on macos-latest and windows-latest as well
     runs-on: ${{ matrix.platform }}
     steps:
+      - name: Install Go
+        uses: actions/setup-go@v1
+        with:
+          go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v2
       - name: Init repo
         run: make init NAME=github.com/ashishb/golang-template-repo
