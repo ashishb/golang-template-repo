@@ -42,6 +42,9 @@ docker_lint:
 
 html_lint:
 	find website -iname '*htm*' -exec htmlhint  --config .htmlhintrc {} \;
+	
+update_go_deps:
+	GO111MODULE=on go get -t -u ./...
 
 lint: format go_lint docker_lint html_lint build
 
