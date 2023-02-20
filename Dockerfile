@@ -15,7 +15,6 @@ WORKDIR /codebase
 RUN apk add --no-cache build-base upx
 COPY Makefile go.mod go.sum /codebase/
 COPY src /codebase/src
-RUN ls -lR /codebase
 RUN make build_prod
 
 FROM base
