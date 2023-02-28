@@ -80,6 +80,8 @@ docker_run: docker_build
 docker_gcr_login:
 	gcloud auth configure-docker
 
+# One time: enable container registry by visiting
+# https://console.cloud.google.com/marketplace/product/google/containerregistry.googleapis.com?project=${GOOGLE_CLOUD_PROJECT_ID}
 docker_gcr_push: docker_build
 	docker push ${DOCKER_TAG}
 	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_ID}"
