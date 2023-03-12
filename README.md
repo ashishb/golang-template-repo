@@ -22,6 +22,6 @@
 3. Create a new Cloud run service at [https://console.cloud.google.com/run](https://console.cloud.google.com/run)
 4. Put the cloud run service name in `GOOGLE_CLOUD_RUN_SERVICE_NAME` variable in Makefile
 5. Install [google-cloud-sdk](https://formulae.brew.sh/cask/google-cloud-sdk)
-6. Run `docker_gcr_login`. This is only required only once on your Google Cloud SDK installation
+6. Run `make docker_gcr_login`. This is only required only once on your Google Cloud SDK installation
 7. Now, push your local image to Google Cloud registry using `make docker_gcr_push`
 8. And deploy the image using `make gcloud_deploy`
