@@ -23,8 +23,6 @@ build_prod:
 	# Shrink binary by removing symbol and DWARF table
 	# Ref: https://lukeeckley.com/post/useful-go-build-flags/
 	GO111MODULE=on go build -v -ldflags="-s -w" -o bin/${BINARY_NAME} src/*.go
-	# Shrink with upx - this is slow and can take minutes
-	upx --brute bin/${BINARY_NAME}
 
 # Warning: This produces the same "bot" binary as `build` command.
 build_linux:
@@ -82,10 +80,15 @@ docker_gcr_login:
 
 # One time: enable container registry by visiting
 # https://console.cloud.google.com/marketplace/product/google/containerregistry.googleapis.com?project=${GOOGLE_CLOUD_PROJECT_ID}
+# or
+# Enable Google Artifact Registry via
+# gcloud --project ${GOOGLE_CLOUD_PROJECT_ID} services enable containerregistry.googleapis.com
 docker_gcr_push: docker_build
 	docker push ${DOCKER_TAG}
 	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
+# Enable Google Cloud Run via
+# gcloud --project ${GOOGLE_CLOUD_PROJECT_ID} services enable run.googleapis.com
 gcloud_deploy: docker_gcr_push
 	git tag "gcloud_deploy_$(shell date | tr ' ' '_' | tr ':' '-')"
 	gcloud run deploy ${GOOGLE_CLOUD_RUN_SERVICE_NAME} \

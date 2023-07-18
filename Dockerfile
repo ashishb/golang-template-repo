@@ -11,8 +11,7 @@ WORKDIR /codebase
 
 # Full package list is here https://pkgs.alpinelinux.org/packages
 # build-base = To install make
-# upx = To shrink the binary
-RUN apk add --no-cache build-base upx
+RUN apk add --no-cache build-base
 COPY Makefile go.mod go.sum /codebase/
 COPY src /codebase/src
 RUN make build_prod
