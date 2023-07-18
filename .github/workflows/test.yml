@@ -10,29 +10,29 @@ jobs:
   test:
     strategy:
       matrix:
-        go-version: [1.18.x, 1.19.x]
+        go-version: [1.19.x, 1.20.x]
         platform: [ubuntu-latest, macos-latest]  # You can test on windows-latest as well
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Install Go
-      uses: actions/setup-go@v1
-      with:
-        go-version: ${{ matrix.go-version }}
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Init
-      run: make init NAME=github.com/ashishb/golang-template-repo
-    - name: Fetch modules
-      run: touch go.sum && go mod tidy
-    - name: Build
-      run: make build_debug
-    - name: Build Linux
-      run: make build_linux
-      # - name: Lint
-      #   run: go get -u golang.org/x/lint/golint && make lint
-    - name: Verify no formatting issues
-      # Source: https://github.com/golang/go/issues/24230
-      run: test -z $(go fmt ./src/...)
-    - name: Test
-      run: make test
-
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: Init
+        run: make init NAME=github.com/ashishb/golang-template-repo
+      - name: Fetch modules
+        run: touch go.sum && go mod tidy
+      - name: Build
+        run: make build_debug
+      - name: Build Linux
+        run: make build_linux
+        # - name: Lint
+        #   run: go get -u golang.org/x/lint/golint && make lint
+      - name: Verify no formatting issues
+        # Source: https://github.com/golang/go/issues/24230
+        run: test -z $(go fmt ./src/...)
+      - name: Test
+        run: make test
+  

@@ -9,15 +9,15 @@ jobs:
   docker_build:
     strategy:
       matrix:
-        go-version: [1.18.x, 1.19.x]
+        go-version: [1.19.x, 1.20.x]
         platform: [ubuntu-latest]  # You can test on macos-latest and windows-latest as well
     runs-on: ${{ matrix.platform }}
     steps:
+      - uses: actions/checkout@v3
       - name: Install Go
-        uses: actions/setup-go@v1
+        uses: actions/setup-go@v4
         with:
           go-version: ${{ matrix.go-version }}
-      - uses: actions/checkout@v2
       - name: Init repo
         run: make init NAME=github.com/ashishb/golang-template-repo
       - name: Fetch modules
