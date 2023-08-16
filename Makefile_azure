@@ -1,0 +1,62 @@
+DOCKER_NAME := docker-image-name
+PORT := 80
+GIT_COMMIT := $(shell git rev-parse --short HEAD)
+
+# Used by Azure Container Registry - this cannot contain dashes
+ACR_NAME:= <name>
+DOCKER_TAG := "${ACR_NAME}.azurecr.io/images/${DOCKER_NAME}:${GIT_COMMIT}"
+WEB_APP_NAME := "app-name"
+# Everyting on Azure has to belong to a resource group!
+WEB_APP_RESOURCE_GROUP := "<resource-group>"
+
+one_time_setup: one_time_login one_time_setup_azure_web_app one_time_setup_azure_container_registry
+
+# Install Azure CLI before this
+# https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
+one_time_login:
+	az login
+
+# Ref: https://learn.microsoft.com/en-us/azure/container-apps/get-started?tabs=bash
+one_time_setup_azure_web_app:
+	az provider register --namespace Microsoft.App
+	az provider register --namespace Microsoft.OperationalInsights
+
+# On GCP this is once a day
+# On Azure, this is almost once every few hours :/
+# Ref: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-get-started-docker-cli?tabs=azure-cli
+one_time_setup_azure_container_registry:
+	az acr login --name ${ACR_NAME}
+	# Ref: https://learn.microsoft.com/en-us/azure/container-registry/container-registry-authentication?tabs=azure-cli#admin-account
+	az acr update -n ${ACR_NAME} --admin-enabled true
+
+# Change this to build your Dockerfile
+docker_build:
+	DOCKER_BUILDKIT=1 docker buildx build --platform linux/amd64 -f ./Dockerfile -t ${DOCKER_TAG} .
+	echo "Created docker image with tag ${DOCKER_TAG} and size `docker image inspect ${DOCKER_TAG} --format='{{.Size}}' | numfmt --to=iec-i`"
+
+# Change this to match your ".env" setup
+docker_run: docker_build
+	echo "Web server will be available on http://localhost:${PORT}"
+	docker rm ${DOCKER_NAME} 2>/dev/null || true
+	echo "Starting image ${DOCKER_TAG}"
+	docker run \
+		--env-file .env \
+		-p 80:80 ${DOCKER_TAG}
+
+docker_acr_push: docker_build
+	echo "If you get an error 'authentication required' then run make one_time_setup_azure_container_registry"
+	echo "Azure Container Registry requires re-login every few hours"
+	docker push ${DOCKER_TAG}
+
+docker_awa_deploy: docker_acr_push
+	echo "Deploying staging on Azure Web App"
+	az webapp config container set \
+	    --docker-custom-image-name ${DOCKER_TAG} \
+	    --name ${WEB_APP_NAME} \
+        --resource-group ${WEB_APP_RESOURCE_GROUP}
+	az webapp update \
+		--name ${WEB_APP_NAME} \
+		--resource-group ${WEB_APP_RESOURCE_GROUP}
+
+docker_awa_stream_logs:
+	az webapp log tail -n ${WEB_APP_NAME} -g ${WEB_APP_RESOURCE_GROUP}
