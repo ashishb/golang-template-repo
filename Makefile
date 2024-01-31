@@ -63,12 +63,12 @@ run_debug:  # watch for modifications and restart the binary if any golang file 
 	filewatcher --immediate --restart "**/*.go" "killall ${BINARY_NAME}; make run"
 
 docker_build:
-	DOCKER_BUILDKIT=1 docker build -f Dockerfile -t ${DOCKER_TAG} --build-arg BINARY_NAME=${BINARY_NAME} .
+	DOCKER_BUILDKIT=1 docker build --platform=linux/amd64 -f Dockerfile -t ${DOCKER_TAG} --build-arg BINARY_NAME=${BINARY_NAME} .
 	echo "Created docker image with tag ${DOCKER_TAG} and size `docker image inspect ${DOCKER_TAG} --format='{{.Size}}' | numfmt --to=iec-i`"
 
 # For local testing
 docker_run: docker_build
-	docker rm ${BINARY_NAME}; docker run --name ${BINARY_NAME} -p 127.0.0.1:80:80 \
+	docker rm ${BINARY_NAME}; docker run --platform=linux/amd64 --name ${BINARY_NAME} -p 127.0.0.1:80:80 \
 		-p 127.0.0.1:443:443 \
 		--env PORT=80 \
 		--env SECRET_VALUE=${SECRET_VALUE} \
