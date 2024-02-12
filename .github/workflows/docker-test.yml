@@ -13,7 +13,7 @@ jobs:
         platform: [ubuntu-latest]  # You can test on macos-latest and windows-latest as well
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Go
         uses: actions/setup-go@v5
         with:
