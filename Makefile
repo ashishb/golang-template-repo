@@ -7,7 +7,7 @@ REGION="us-east4"
 # We base64 encode it to remove encode all special characters including whitespace
 SECRET_VALUE=`cat secret.txt | base64`
 
-DOCKER_TAG = "gcr.io/${GOOGLE_CLOUD_PROJECT_ID}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
+DOCKER_TAG := "${REGION}-docker.pkg.dev/${GOOGLE_CLOUD_PROJECT_ID}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}/${GOOGLE_CLOUD_RUN_SERVICE_NAME}:main"
 
 # One-time usage
 # Example: `make init NAME=calendarbot`
@@ -75,21 +75,21 @@ docker_run: docker_build
 		-it ${DOCKER_TAG}
 
 # One time
-docker_gcr_login:
-	gcloud auth configure-docker
-
-# One time: enable container registry by visiting
-# https://console.cloud.google.com/marketplace/product/google/containerregistry.googleapis.com?project=${GOOGLE_CLOUD_PROJECT_ID}
+docker_gar_login:
+	gcloud auth configure-docker ${REGION}-docker.pkg.dev
+	
+# One time: enable artifact registry by visiting
+# https://console.cloud.google.com/marketplace/product/google/artifactregistry.googleapis.com?project=${GOOGLE_CLOUD_PROJECT_ID}
 # or
 # Enable Google Artifact Registry via
-# gcloud --project ${GOOGLE_CLOUD_PROJECT_ID} services enable containerregistry.googleapis.com
-docker_gcr_push: docker_build
+# gcloud --project ${GOOGLE_CLOUD_PROJECT_ID} services enable artifactregistry.googleapis.com
+docker_gar_push: docker_build
 	docker push ${DOCKER_TAG}
 	echo "Pushed image can be seen at https://console.cloud.google.com/run?project=${GOOGLE_CLOUD_PROJECT_ID}"
 
 # Enable Google Cloud Run via
 # gcloud --project ${GOOGLE_CLOUD_PROJECT_ID} services enable run.googleapis.com
-gcloud_deploy: docker_gcr_push
+gcloud_deploy: docker_gar_push
 	git tag "gcloud_deploy_$(shell date | tr ' ' '_' | tr ':' '-')"
 	gcloud run deploy ${GOOGLE_CLOUD_RUN_SERVICE_NAME} \
 		--image ${DOCKER_TAG} \
